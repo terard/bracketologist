@@ -12,7 +12,6 @@ end
 def extract_team_ratings(doc)
   ratings = {}
   doc.css("#ratings-table tbody tr").each do |row|
-    break if count > 5
     next if row.children.length < 7
     school = row.children[1].content
     pyth = row.children[4].content
