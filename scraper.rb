@@ -5,17 +5,17 @@ require 'nokogiri'
 require 'open-uri'
 
 def fetch_web_content
-  url = "http://kenpom.com/index.php?y=2013"
-
+  url = "http://kenpom.com/index.php?y=2014"
   return Nokogiri::HTML(open(url))
 end
 
 def extract_team_ratings(doc)
   ratings = {}
   doc.css("#ratings-table tbody tr").each do |row|
+    break if count > 5
     next if row.children.length < 7
-    school = row.children[2].content
-    pyth = row.children[8].content
+    school = row.children[1].content
+    pyth = row.children[4].content
 
     school.gsub!(/\d+$/, "")
 
@@ -23,7 +23,6 @@ def extract_team_ratings(doc)
 
     ratings[school] = pyth
   end
-
   return ratings
 end
 

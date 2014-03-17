@@ -1,3 +1,5 @@
+require 'pry'
+
 class BracketEngine
   # Applies the log5 formula to determine the odds of one team beating another.
   def self.log5(a, b)
@@ -7,7 +9,7 @@ class BracketEngine
   # Accepts an array of teams in the order of their seeding (so that the matchups
   # work). Returns an array of the winning teams from the matchup. So for the first
   # round, it takes 16 teams and returns the 8 winners. It figures out the odds of
-  # each team winning and determines a winner based on the random number generator.
+  # each team winning and determines a winner.
   def self.reduce(bracket)
     winners = []
 
@@ -22,7 +24,7 @@ class BracketEngine
 
       puts opponent_a + " has a " + (winning_pct_for_a * 100).round().to_s + "% chance of beating " + opponent_b
 
-      if rand() > winning_pct_for_a
+      if winning_pct_for_a < 0.5
         puts "Winner: " + opponent_b + "\n\n"
         winners << opponent_b
       else
@@ -65,30 +67,38 @@ class Bracket
     # Must be in order of seeding. Names must match the keys in $teams
     #
     # Pick play-in game winners.
-    round_1_g1 = BracketEngine.play_in_game("Game 1", ["North Carolina A&T", "Liberty"])
-    round_1_g2 = BracketEngine.play_in_game("Game 2", ["Boise St.", "La Salle"])
-    round_1_g3 = BracketEngine.play_in_game("Game 3", ["Long Island", "James Madison"])
-    round_1_g4 = BracketEngine.play_in_game("Game 4", ["Middle Tennessee", "St. Mary's"])
+    round_1_g1 = BracketEngine.play_in_game("Game 1", ["Albany", "Mount St. Mary's"])
+    round_1_g2 = BracketEngine.play_in_game("Game 2", ["Cal Poly", "Texas Southern"])
+    round_1_g3 = BracketEngine.play_in_game("Game 3", ["North Carolina St.", "Xavier"])
+    round_1_g4 = BracketEngine.play_in_game("Game 4", ["Tennessee", "Iowa"])
 
-    west = [ "Gonzaga", "Ohio St.", "New Mexico", "Kansas St.", "Wisconsin",
-      "Arizona", "Notre Dame", "Pittsburgh", "Wichita St.", "Iowa St.",
-      "Belmont", "Mississippi", round_1_g2[0], "Harvard",
-      "Iona", "Southern" ]
+    west = [
+      "Arizona", "Wisconsin", "Creighton", "San Diego St.",
+      "Oklahoma", "Baylor", "Oregon", "Gonzaga",
+      "Oklahoma St.", "BYU", "Nebraska", "North Dakota St.",
+      "New Mexico St.", "Louisiana Lafayette", "American", "Weber St."
+    ]
 
-    east = [ "Indiana", "Miami FL", "Marquette", "Syracuse", "Nevada Las Vegas",
-      "Butler", "Illinois", "North Carolina St.", "Temple",
-      "Colorado", "Bucknell", "California", "Montana", "Davidson",
-      "Pacific", round_1_g3[0]]
+    east = [
+      "Virginia", "Villanova", "Iowa St.", "Michigan St.",
+      "Cincinnati", "North Carolina", "Connecticut", "Memphis",
+      "George Washington", "Saint Joseph's", "Providence", "Harvard",
+      "Delaware", "North Carolina Central", "Milwaukee", "Coastal Carolina"
+    ]
 
-    midwest = [ "Louisville", "Duke", "Michigan St.", "St. Louis", "Oklahoma St.",
-      "Memphis", "Creighton", "Colorado St.", "Missouri", "Cincinnati",
-      round_1_g4[0], "Oregon", "New Mexico St.", "Valparaiso",
-      "Albany",  round_1_g1[0] ]
+    midwest = [
+      "Wichita St.", "Michigan", "Duke", "Louisville",
+      "Saint Louis", "Massachusetts", "Texas", "Kentucky",
+      "Kansas St.", "Arizona St.", round_1_g4[0], round_1_g3[0],
+      "Manhattan", "Mercer", "Wofford", round_1_g2[0]
+    ]
 
-    south = [ "Kansas", "Georgetown", "Florida", "Michigan", "Virginia Commonwealth",
-      "UCLA", "San Diego St.", "North Carolina", "Villanova", "Oklahoma",
-      "Minnesota", "Akron", "South Dakota St.", "Northwestern St.",
-      "Florida Gulf Coast", "Western Kentucky" ]
+    south = [
+      "Florida", "Kansas", "Syracuse", "UCLA",
+      "VCU", "Ohio St.", "New Mexico", "Colorado",
+      "Pittsburgh", "Stanford", "Dayton", "Stephen F. Austin",
+      "Tulsa", "Western Michigan", "Eastern Kentucky", round_1_g1[0]
+    ]
 
     # This order is important so that the proper teams meet in the final four.
     @regions = { "Midwest" => midwest, "East" => east, "South" => south, "West" => west }
@@ -99,4 +109,3 @@ class Bracket
     @final_four_teams = []
   end
 end
-
